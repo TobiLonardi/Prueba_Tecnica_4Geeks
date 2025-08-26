@@ -10,6 +10,9 @@ from api.models import db
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
+from flask_jwt_extended import JWTManager
+from flask_cors import CORS
+from datetime import timedelta
 
 # from models import Person
 
@@ -18,6 +21,13 @@ static_file_dir = os.path.join(os.path.dirname(
     os.path.realpath(__file__)), '../dist/')
 app = Flask(__name__)
 app.url_map.strict_slashes = False
+
+app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY") 
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=20)
+app.config["JWT_BLACKLIST_ENABLED"] = True 
+jwt = JWTManager(app)
+
+BLACKLIST = set()
 
 # database condiguration
 db_url = os.getenv("DATABASE_URL")
@@ -70,3 +80,11 @@ def serve_any_other_file(path):
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3001))
     app.run(host='0.0.0.0', port=PORT, debug=True)
+
+
+@jwt.token_in_blocklist_loader
+def check_if_token_in_blacklist(jwt_header, jwt_payload):
+    jti = jwt_payload["jti"]  # jti = JWT ID único
+    return jti in BLACKLIST
+
+

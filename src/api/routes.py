@@ -10,26 +10,15 @@ from base64 import b64encode
 import os
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity,JWTManager,get_jwt
 from datetime import timedelta
+from app import BLACKLIST
 
 
 
 api = Blueprint('api', __name__)
-app = Flask(__name__)
 
-BLACKLIST = set()
 def create_password(password, salt):
     return generate_password_hash(f"{password}{salt}")
 
-jwt = JWTManager(app)
-app.config["JWT_SECRET_KEY"] = "clave-super-secreta"  # cámbiala por algo seguro
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=20)
-app.config["JWT_BLACKLIST_ENABLED"] = True
-
-
-@jwt.token_in_blocklist_loader
-def check_if_token_in_blacklist(jwt_header, jwt_payload):
-    jti = jwt_payload["jti"]  # jti = JWT ID único
-    return jti in BLACKLIST
 
 
 # Allow CORS requests to this API
