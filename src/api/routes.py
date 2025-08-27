@@ -10,7 +10,7 @@ from base64 import b64encode
 import os
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity,JWTManager,get_jwt
 from datetime import timedelta
-from app import BLACKLIST
+from blackList import BLACKLIST
 
 
 
