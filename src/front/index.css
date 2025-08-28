@@ -1,0 +1,42 @@
+h1{
+    font-size: 80px;
+    color: rgba(250, 216, 104, 0.504);
+}
+
+
+
+ul{
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+}
+
+ul > li{
+    padding: 7px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+ul > li > span{
+    border: 0px;
+    position : absolute;
+    inset: 0;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    padding: 0px 10px;
+    opacity: 0;
+    transition: all .3s;
+
+}
+
+ul > li > span:hover{
+    opacity: 1;
+}
+ul > li > i{
+    border: 0px solid green;
+    padding: 2px 15px;
+    color: grey;
+    font-size: 1.5rem;
+}

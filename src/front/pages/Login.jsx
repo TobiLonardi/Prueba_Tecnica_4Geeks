@@ -38,7 +38,7 @@ export const Login = () => {
             dispatch({ type: "LOGIN_USER", payload: data.user })
             console.log(store.user)
             setTimeout(() => {
-                //navigate("/menu")
+                navigate("/todos")
             }, 2000)
         }
         else if (response.status === 400) {

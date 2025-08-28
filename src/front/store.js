@@ -44,12 +44,13 @@ export default function storeReducer(store, action = {}) {
         token: action.payload,
       };
 
-   // case "LOGOUT":
-     // return {
-       // ...store,
-        //token: null,
-        //user: { id: null, name: "", email: ""},
-      //};
+    case "UPDATE_TOKEN":
+      localStorage.getItem("token",action.payload)
+      return{
+        ...store,
+        token:action.payload
+
+      }
     case "LOGIN_USER":
       return {
         ...store,
