@@ -45,9 +45,10 @@ def add_user():
     data = request.json
     email = data.get("email", None)
     password = data.get("password", None)
+    username = data.get("username", None)
     salt = b64encode(os.urandom(32)).decode("utf-8")
-    if not email or not password:
-        return jsonify({"mensaje": "Necesitas completar el email y su password"}), 400
+    if not email or not password or not username:
+        return jsonify({"mensaje": "Necesitas completar el email, su password y su username"}), 400
     elif (User().query.filter_by(email=email).one_or_none() is not None):
         return jsonify({"mensaje": "Este mail ya está registrado, intenta con algún otro"}), 400
 
@@ -55,6 +56,7 @@ def add_user():
     user.email = email
     user.password = set_password(password, salt)
     user.salt = salt
+    user.username = username
    
     db.session.add(user)
     try:
