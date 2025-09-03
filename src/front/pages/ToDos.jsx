@@ -98,7 +98,8 @@ export const ToDos = () => {
 		dispatch({ type: "UPDATE_TOKEN", payload: null })
 	}
 
-	if (!store.token) {
+	if (!store.token || token==null) {
+		localStorage.removeItem("token")
 		return <Navigate to={"/login"} />
 	}
 	return (
