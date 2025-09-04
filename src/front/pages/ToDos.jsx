@@ -20,6 +20,14 @@ export const ToDos = () => {
 
 	const token = localStorage.getItem("token")
 
+	const [editingId, setEditingId] = useState(null);
+	const [editingText, setEditingText] = useState("");
+
+	const startEditing = (todo) => {
+		setEditingId(todo.id);
+		setEditingText(todo.label);
+	};
+
 
 
 
@@ -67,7 +75,7 @@ export const ToDos = () => {
 	};
 
 	const toggleComplete = async (todo) => {
-		const response = await fetch(`${url}/api/tasks/${todo.id}`, {
+		const response = await fetch(`${url}/api/tasks_done/${todo.id}`, {
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",
@@ -84,6 +92,23 @@ export const ToDos = () => {
 		}
 	};
 
+	const saveEdit = async (todo) => {
+		const response = await fetch(`${url}/api/tasks/${todo.id}`, {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+				"Authorization": `Bearer ${token}`
+			},
+			body: JSON.stringify({ label: editingText })  
+		});
+
+		if (response.ok) {
+			setToDos(toDos.map(item =>
+				item.id === todo.id ? { ...item, label: editingText } : item
+			));
+			setEditingId(null);
+		}
+	};
 
 	const logOut = async (event) => {
 
@@ -98,7 +123,7 @@ export const ToDos = () => {
 		dispatch({ type: "UPDATE_TOKEN", payload: null })
 	}
 
-	if (!store.token || token==null) {
+	if (!store.token || token == null) {
 		localStorage.removeItem("token")
 		return <Navigate to={"/login"} />
 	}
@@ -125,26 +150,40 @@ export const ToDos = () => {
 								return (
 									<li
 										key={todo.id}
-										className={`border rounded text-body-secondary ${todo.completed ? "text-decoration-line-through" : ""}`}
-										
+										className={`border rounded text-body-secondary `}
 									>
-										{todo.label}
+										{editingId === todo.id ? (
+											<input
+												type="text"
+												value={editingText}
+												onChange={(e) => setEditingText(e.target.value)}
+												onKeyDown={(e) => {
+													if (e.key === "Enter") saveEdit(todo);
+													if (e.key === "Escape") setEditingId(null); // cancelar edición
+												}}
+												autoFocus
+											/>
+										) : (
+											<div onClick={() => {startEditing(todo);}} 
+											className={`${todo.completed ? "text-decoration-line-through" : ""}`}>{todo.label}</div>
+										)}
+
 										<span>
-											<i class="fa-solid fa-check m-3"
-											onClick={(e)=>{
+											<i
+												className="fa-solid fa-check m-3"
+												onClick={(e) => {
 													e.stopPropagation();
-													toggleComplete(todo)}
-											}></i>
+													toggleComplete(todo);
+												}}
+											></i>
 
 											<i
 												className="fa-solid fa-xmark m-1"
 												onClick={(e) => {
-													e.stopPropagation(); // <- evita que al borrar también se dispare el toggle
+													e.stopPropagation();
 													eliminateElement(todo.id);
 												}}
 											></i>
-												
-											
 										</span>
 									</li>
 								)

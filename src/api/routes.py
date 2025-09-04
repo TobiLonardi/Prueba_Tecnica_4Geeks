@@ -138,9 +138,9 @@ def delete_todo(task_id):
     db.session.commit()
     return jsonify({"message": "Task deleted"}), 200
 
-@api.route("/tasks/<int:task_id>", methods=["PUT"])
+@api.route("/tasks_done/<int:task_id>", methods=["PUT"])
 @jwt_required()
-def update_todo(task_id):
+def done_todo(task_id):
     user_id = get_jwt_identity()
     todo = ToDos.query.filter_by(id=task_id, user_id=user_id).one_or_none()
     if todo is None:
@@ -150,3 +150,24 @@ def update_todo(task_id):
     todo.completed = data.get("completed", todo.completed)
     db.session.commit()
     return jsonify(todo.serialize()), 200
+
+@api.route("/tasks/<int:task_id>", methods=["PUT"])
+@jwt_required()
+def update_todo(task_id):
+    user_id = get_jwt_identity()
+    todo = ToDos.query.filter_by(id=task_id, user_id=user_id).one_or_none()
+    if todo is None:
+        return jsonify({"msg": "Todo not found"}), 404
+    data = request.json
+    todo.label = data.get("label", todo.label)
+    try:
+        db.session.commit()
+        return jsonify({
+            "id": todo.id,
+            "label": todo.label,
+            "completed": todo.completed,
+            "user_id": todo.user_id
+        }), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"mensaje": f"Error: {str(e)}"}), 500
