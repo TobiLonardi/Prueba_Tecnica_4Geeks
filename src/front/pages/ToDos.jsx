@@ -126,18 +126,25 @@ export const ToDos = () => {
 									<li
 										key={todo.id}
 										className={`border rounded text-body-secondary ${todo.completed ? "text-decoration-line-through" : ""}`}
-										onClick={() => toggleComplete(todo)}
-										style={{ cursor: "pointer" }}
+										
 									>
 										{todo.label}
 										<span>
+											<i class="fa-solid fa-check m-3"
+											onClick={(e)=>{
+													e.stopPropagation();
+													toggleComplete(todo)}
+											}></i>
+
 											<i
-												className="fa-solid fa-xmark"
+												className="fa-solid fa-xmark m-1"
 												onClick={(e) => {
 													e.stopPropagation(); // <- evita que al borrar también se dispare el toggle
 													eliminateElement(todo.id);
 												}}
 											></i>
+												
+											
 										</span>
 									</li>
 								)
