@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react";
 import { Link, useNavigate, Navigate } from "react-router-dom"
 import useGlobalReducer from "../hooks/useGlobalReducer"
 
@@ -7,11 +7,22 @@ const initialStateUser = {
     password: ""
 }
 
+
+
+const loadPage=()=>{
+    localStorage.removeItem("token")
+}
+
+
 export const Login = () => {
     const [user, setUser] = useState(initialStateUser)
 
     const { dispatch, store } = useGlobalReducer()
     const navigate = useNavigate()
+
+    useEffect(() => {
+        loadPage();
+    }, []);
 
     const handleChange = ({ target }) => {
         setUser({

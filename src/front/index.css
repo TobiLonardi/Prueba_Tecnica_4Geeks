@@ -17,10 +17,10 @@ ul > li{
     justify-content: space-between;
     align-items: center;
     position: relative;
+    
 }
 ul > li > span{
     border: 0px;
-    position : absolute;
     inset: 0;
     display: flex;
     justify-content: end;

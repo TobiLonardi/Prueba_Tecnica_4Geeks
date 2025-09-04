@@ -3,6 +3,7 @@ import {Link, useNavigate} from "react-router-dom"
 
 const initialStateUser = {
     email:"",
+    username:"",
     password:"",
 }
 
@@ -57,6 +58,17 @@ export const Register = () => {
                             className="form-control"
                             id="btnEmail"
                             name="email"
+                            onChange={handleChange}
+                            />
+                        </div>
+                        <div className="form-group mb-3 text-light">
+                            <label htmlFor="btnName">Username</label>
+                            <input
+                            type="text"
+                            placeholder="JhonDoe18"
+                            className="form-control"
+                            id="btnName"
+                            name="username"
                             onChange={handleChange}
                             />
                         </div>
