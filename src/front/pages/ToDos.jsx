@@ -108,6 +108,12 @@ export const ToDos = () => {
 			));
 			setEditingId(null);
 		}
+		if(response.status==500){
+			alert("error al cargar token, comunicarse con admin")
+		}
+		else{
+			return <Navigate to={"/login"} />
+		}
 	};
 
 	const logOut = async (event) => {
